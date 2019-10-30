@@ -1,6 +1,6 @@
-#include <stdio.h>
+#include "travail_preparatoire/fonction_prep.h"
 
 int main() {
-    printf("Hello, World!\n");
+    get_nombre_impairs();
     return 0;
 }
