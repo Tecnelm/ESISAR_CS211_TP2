@@ -2,6 +2,7 @@ CC = gcc
 CFLAGS = -Wall
 OUT = out
 EXEC = TP2
+DEBUG = no
 
 OBJDIR = obj
 SRCDIR = travail_preparatoire
@@ -11,8 +12,9 @@ MAIN = main.c
 SRCS= $(wildcard $(SRCDIR)/*.c)
 OBJS= $(SRCS:$(SRCDIR)/%.c=$(OUT)/$(OBJDIR)/%.o) $(OUT)/$(OBJDIR)/main.o
 
-
-
+ifeq ($(DEBUG),yes)
+	CFLAGS = $(CFLAGS) -g
+endif
 
 $(OUT)/$(EXEC):$(OBJS)
 	@mkdir -p $(OUT)
