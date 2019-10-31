@@ -9,14 +9,16 @@ SRCDIR = travail_preparatoire
 MAINDIR = .
 
 MAIN = main.c
+
 SRCS= $(wildcard $(SRCDIR)/*.c)
 OBJS= $(SRCS:$(SRCDIR)/%.c=$(OUT)/$(OBJDIR)/%.o) $(OUT)/$(OBJDIR)/main.o
+HEADER =$(wildcard $(SRCDIR)/*.h)
 
 ifeq ($(DEBUG),yes)
 	CFLAGS = $(CFLAGS) -g
 endif
 
-$(OUT)/$(EXEC):$(OBJS)
+$(OUT)/$(EXEC):$(OBJS) $(HEADER)
 	@mkdir -p $(OUT)
 	@mkdir -p $(OUT)/$(OBJDIR)
 	$(CC) $(CFLAGS) $(OBJS) -o $@
@@ -26,10 +28,10 @@ $(OUT)/$(OBJDIR)/main.o: $(MAINDIR)/main.c
 	@mkdir -p $(OUT)/$(OBJDIR)
 	$(CC) -o $@ -c $^ $(CFLAGS)
 
-$(OUT)/$(OBJDIR)/%.o: $(SRCDIR)/%.c
+$(OUT)/$(OBJDIR)/%.o: $(SRCDIR)/%.c $(SRCDIR)/%.h
 	@mkdir -p $(OUT)
 	@mkdir -p $(OUT)/$(OBJDIR)
-	$(CC) -o $@ -c $^ $(CFLAGS)
+	$(CC) -o $@ -c $< $(CFLAGS)
 
 .PHONY: clean mrproper
 
