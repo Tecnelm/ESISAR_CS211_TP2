@@ -39,11 +39,14 @@ int *get_info_char(const char *folder_name) {
     }
     while (EOF != (c = getc(folder))) {
         if (is_inside(c, compare, n))
+        {
             vowell++;
-        if (is_upper(c))
-            maj++;
-        else if (is_lower(c))
-            min++;
+            if (is_upper(c))
+                maj++;
+            else if (is_lower(c))
+                min++;
+        }
+
     }
     if (EOF == fclose(folder)) {
         fprintf(stderr, "Failure close folder %s", folder_name);

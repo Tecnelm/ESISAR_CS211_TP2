@@ -1,3 +1,13 @@
 Travail préparatoire :
-    Question 1:
+    Question 1/2:
         fonction dans le fichier: fonction_prep.c
+
+    Question préparaoire:
+       Ouvrir le fichier transporteur.txt
+       Crée le fichier transporteurSource.bin
+       Lire caractère par caractère le fichier transporteur.txt
+        si le caractère est une lettre
+            si le caractère est en majuscule écrire 1 dans le fichier binaire
+            Si le caractère est minuscule écrire 0 dans le fichier binaire
+       Fermer transporteur.txt
+       FermertransporteurSource.bin
