@@ -3,6 +3,7 @@ CFLAGS = -Wall
 OUT = out
 EXEC = TP2
 DEBUG = no
+TEST = yes
 
 OBJDIR = obj
 SRCDIR = travail_preparatoire
@@ -15,7 +16,10 @@ OBJS= $(SRCS:$(SRCDIR)/%.c=$(OUT)/$(OBJDIR)/%.o) $(OUT)/$(OBJDIR)/main.o
 HEADER =$(wildcard $(SRCDIR)/*.h)
 
 ifeq ($(DEBUG),yes)
-	CFLAGS = $(CFLAGS) -g
+	CFLAGS := $(CFLAGS) -g
+endif
+ifeq ($(TEST),yes)
+	CFLAGS := $(CFLAGS) -DTEST
 endif
 
 $(OUT)/$(EXEC):$(OBJS) $(HEADER)
@@ -34,6 +38,7 @@ $(OUT)/$(OBJDIR)/%.o: $(SRCDIR)/%.c $(SRCDIR)/%.h
 	$(CC) -o $@ -c $< $(CFLAGS)
 
 .PHONY: clean mrproper
+
 
 clean:
 	@rm -rf $(OUT)/$(OBJDIR)/*.o
