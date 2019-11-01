@@ -1,9 +1,6 @@
 #include "src/fonction_decode_question_I1.h"
 #include "src/utility_fonction.h"
 
-//#include "src/fonction_decode_question_I1.c"
-
-
 int main() {
 
     char *transporteur_path ="../Data/transporteur.txt";
