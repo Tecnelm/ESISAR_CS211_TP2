@@ -6,7 +6,7 @@ DEBUG = no
 TEST = no
 
 OBJDIR = obj
-SRCDIR = travail_preparatoire
+SRCDIR = src
 MAINDIR = .
 
 MAIN = main.c

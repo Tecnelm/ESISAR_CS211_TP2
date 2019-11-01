@@ -1,6 +1,6 @@
-#include "travail_preparatoire/fonction_prep.h"
+#include "src/fonction_prep.h"
 
-//#include "travail_preparatoire/fonction_prep.c"
+//#include "src/fonction_prep.c"
 
 int main(int argc, char *argv[]) {
     int *data;
