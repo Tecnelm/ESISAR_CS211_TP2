@@ -1,7 +1,6 @@
 #include "fonction_decode_question_I1.h"
-
 #include "utility_fonction.h"
-#include "utility_fonction.c"
+//#include "utility_fonction.c"
 
 
 void decode_fonction(char* source_path,char* transporteur_path)
