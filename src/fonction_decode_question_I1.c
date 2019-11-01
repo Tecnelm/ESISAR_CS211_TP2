@@ -8,14 +8,14 @@ void decode_fonction(char* source_path,char* transporteur_path)
 {
     FILE *transporteur;
     FILE *source;
-    int caractere_temp;
+    char caractere_temp;
     int counteur = 0;
 
     transporteur = openFile(transporteur_path,"r");
     source =openFile(source_path,"w");
 
     do {
-        caractere_temp = fgetc(transporteur);
+        caractere_temp = (char)fgetc(transporteur);
         if (caractere_temp >='A' && caractere_temp <='Z') { //[A-Z] <=> [65-91]
             fprintf(source, "1");
             counteur++;
