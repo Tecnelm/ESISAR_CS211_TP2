@@ -1,5 +1,6 @@
 #include "fonction_decode_question_I1.h"
 #include "folder_fonction.h"
+#include "folder_fonction.c"
 
 
 void decode_fonction(char* source_path,char* transporteur_path)
@@ -28,5 +29,5 @@ void decode_fonction(char* source_path,char* transporteur_path)
             counteur =0;
             fprintf(source,"\n");
         }
-    } while (caracteretemp != EOF);
+    } while (caractere_temp != EOF);
 }
