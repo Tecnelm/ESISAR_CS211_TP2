@@ -8,7 +8,7 @@ void decode_fonction(char* source_path,char* transporteur_path)
 {
     FILE *transporteur;
     FILE *source;
-    char caractere_temp;
+    int caractere_temp;
     int counteur = 0;
 
     transporteur = openFile(transporteur_path,"r");
@@ -31,4 +31,6 @@ void decode_fonction(char* source_path,char* transporteur_path)
             fprintf(source,"\n");
         }
     } while (caractere_temp != EOF);
+    closeFile(transporteur);
+    closeFile(source);
 }
