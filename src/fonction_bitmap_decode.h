@@ -2,4 +2,4 @@
 #include "utility_fonction.h"
 
 
-void decode_BPM(char* output_path,char* input_path);
+int decode_BPM(char* output_path,char* input_path);

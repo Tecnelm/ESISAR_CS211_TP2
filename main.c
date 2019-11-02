@@ -1,6 +1,9 @@
-#include "src/utility_fonction.h"
+#include "src/fonction_bitmap_decode.h"
 
 int main() {
-    printf("result := %d",convert_String_hexa("BM"));
+    char* input="../Data/transporteur.bmp";
+    char* output="../Data/source.bmp";
+    decode_BPM(output,input);
+
     return 0;
 }
