@@ -4,7 +4,7 @@ typedef struct __attribute__((__packed__)) {
 	unsigned int tailleFichier; 
 	unsigned int reserve; 
 	unsigned int offset; 
-} fichierEntete; 
+} FichierEntete;
 
 typedef struct __attribute__((__packed__)) {
 	unsigned int tailleEntete;
@@ -18,14 +18,14 @@ typedef struct __attribute__((__packed__)) {
 	unsigned int resolutionVerticale;
 	unsigned int nombreCouleurs; 
 	unsigned int nombreCouleursImportantes; 
-} imageEntete; 
+} ImageEntete;
 
 typedef struct __attribute__((__packed__)) {
 	unsigned char B; 
 	unsigned char V; 
 	unsigned char R; 
 	unsigned char reserve; 
-} couleurPallete; 
+} CouleurPallete;
 
 
 

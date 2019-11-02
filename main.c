@@ -1,6 +1,6 @@
-#include <stdio.h>
+#include "src/utility_fonction.h"
 
 int main() {
-    printf("Hello, World!\n");
+    printf("result := %d",convert_String_hexa("BM"));
     return 0;
 }
