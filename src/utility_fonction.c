@@ -42,3 +42,17 @@ int is_upper(char c) {
 int is_lower(char c) {
     return (c >= 'a' && c <= 'z');
 }
+
+int is_alpha(char c)
+{
+    return (c>='A' && c<='Z')|| (c>='a' && c<='z');
+}
+void print_binary_char(char c)
+{
+    int i;
+    for (i = 0; i < 8; i++) {
+        printf("%d", (c << i) & 0x80); // NOLINT(hicpp-signed-bitwise)
+    }
+
+    printf(" \n");
+}
