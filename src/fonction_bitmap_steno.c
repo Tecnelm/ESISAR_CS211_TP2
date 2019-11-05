@@ -67,7 +67,12 @@ int getHeaderBMP(FILE *file, FichierEntete *fichierEntete, ImageEntete *imageEnt
 int encodeImageBMP(char *sourcePath, char *outputPath, char *transporteurPath) {
     ImageEntete imageEntete;
     FichierEntete fichierEntete;
-    CouleurPallete couleurPallete;
+    CouleurPallete couleurPallete ;
+
+    couleurPallete.B = 0;
+    couleurPallete.V = 0;
+    couleurPallete.R = 0;
+    couleurPallete.reserve = 0;
 
     FILE* transporteur = openFile(transporteurPath, "r");
     FILE* source = openFile(sourcePath,"r");
@@ -77,32 +82,40 @@ int encodeImageBMP(char *sourcePath, char *outputPath, char *transporteurPath) {
     unsigned char temp;
     int index;
     unsigned long sourceSize, indexS;
-    char *dataByte, *imageByte;
-
+    unsigned char *dataByte, *imageByte;
+    long debug_value;
 
 
     getHeaderBMP(transporteur , &fichierEntete, &imageEntete, &couleurPallete);
     fwrite(&fichierEntete, sizeof(FichierEntete),1,output);
     fwrite(&imageEntete, sizeof(ImageEntete),1,output);
 
-    fseek(transporteur,fichierEntete.offset,SEEK_SET);
     fseek(source,0,SEEK_END);
     sourceSize = ftell(source);
     fseek(source,0,SEEK_SET);
 
-    if (!(couleurPallete.B == 0 && couleurPallete.V == 0 && couleurPallete.R == 0))
-        fwrite(&couleurPallete, sizeof(couleurPallete),1,output);
 
-    if(!canDecodeBMP())
+    if (!(couleurPallete.B == 0 && couleurPallete.V == 0 && couleurPallete.R == 0)) {
+        fwrite(&couleurPallete, sizeof(couleurPallete),1,output);
+    }
+
+    if(!canDecodeBMP()) {
         return EXIT_FAILURE;
+    }
 
     imageByte = malloc(sizeof(char)*imageEntete.tailleImage);
-    dataByte = malloc(sizeof(char)*sourceSize);
+    dataByte = malloc(sizeof(char)*(sourceSize+1));
 
     if(imageByte == NULL || dataByte == NULL ){
         fprintf(stderr,"IMPOSSIBLE ALLOCATE MEMORY");
         return EXIT_FAILURE;
     }
+
+    fseek(transporteur,fichierEntete.offset,SEEK_SET);
+    debug_value = ftell(output);
+    debug_value = ftell(source);
+    debug_value = ftell(transporteur);
+
 
     fread(imageByte, sizeof(char)*imageEntete.tailleImage,1,transporteur);
     fread(dataByte, sizeof(char)*sourceSize,1,source);
@@ -111,14 +124,17 @@ int encodeImageBMP(char *sourcePath, char *outputPath, char *transporteurPath) {
     for(indexS =0 ; indexS<sourceSize ; indexS++)
     {
         bufferSource = dataByte[indexS];
+
         for(index = 7 ; index>= 0 ; index --) // need correction of value;
         {
             temp = imageByte[(7-index)+indexS*8];
             temp = (bufferSource>>index & 1)  ? temp|1 : temp & 0xFE;
-
             fputc(temp,output);
         }
     }
+
+    free(imageByte);
+    free(dataByte);
     closeFile(output);
     closeFile(transporteur);
     closeFile(source);

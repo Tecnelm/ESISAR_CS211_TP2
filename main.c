@@ -9,7 +9,7 @@ int main() {
     char* origine = "../Data/originel.bmp";
     char* source = "../Data/source.bmp";
 
-    //decode_BMP(output1,transporteur);
+   // decode_BMP(output1,transporteur);
 
     encodeImageBMP(source, output, origine);
 
