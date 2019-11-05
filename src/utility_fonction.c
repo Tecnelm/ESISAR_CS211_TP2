@@ -47,13 +47,14 @@ int is_alpha(char c){
     return (c>='A' && c<='Z')|| (c>='a' && c<='z');
 }
 
-void print_binary_char(char c){
+void print_binary_char(char c, char lastchar){
     int i;
-    for (i = 0; i < 8; i++) {
-        printf("%d", (c << i) & 0x80); // NOLINT(hicpp-signed-bitwise)
+    for (i = 7; i >= 0; i--) {
+        printf("%d", c>>i & 1);
     }
 
-    printf(" \n");
+
+    printf("%c",lastchar);
 }
 char* convert_char_strHexa(char* string){
 
