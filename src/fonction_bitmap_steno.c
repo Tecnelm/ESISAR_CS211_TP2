@@ -1,46 +1,49 @@
 #include "fonction_bitmap_steno.h"
 
 int decode_BMP(char *output_path, char *input_path) {
-    FILE *input;
-    FILE *output;
+    FILE* input;
+    FILE* output;
     ImageEntete imageEntete;
     FichierEntete fichierEntete;
     CouleurPallete couleurPallete;
-    unsigned char *image;
+    unsigned char* image;
     char buffer;
     int index;
 
 
-    input = openFile(input_path, "r");
-    output = openFile(output_path, "w");
+    input = openFile(input_path,"r");
+    output = openFile(output_path,"w");
 
-    getHeaderBMP(input, &fichierEntete, &imageEntete, &couleurPallete);
-
-    if (fichierEntete.signature != 0x4D42) {//0x4D42 "BM" en hexa
-        fprintf(stderr, "ERROR WRONG FORMAT");
+    fread(&fichierEntete, sizeof(FichierEntete),1,input);
+    if(fichierEntete.signature != 0x4D42){//0x4D42 "BM" en hexa
+        fprintf(stderr,"ERROR WRONG FORMAT");
         return EXIT_FAILURE;
     }
-    fseek(input, fichierEntete.offset,SEEK_SET);
-    if (couleurPallete.B == 0 && couleurPallete.V == 0 && couleurPallete.R == 0) {
+    fread(&imageEntete, sizeof(ImageEntete),1,input);
+    if(ftell(input) != fichierEntete.offset) // check if a pallette is present and get information if it's the case
+        fread(&couleurPallete, sizeof(CouleurPallete),1,input);
+
+    fseek(input,fichierEntete.offset,SEEK_SET);//set the position to the first byte of image
+
+    if(couleurPallete.B == 0 && couleurPallete.V == 0 && couleurPallete.R == 0 ) {
         image = malloc(sizeof(char) * imageEntete.tailleImage);//alloc the right size of pixel
-        fread(image, imageEntete.tailleImage, 1, input);//fill image with all pixel value
+        fread(image,imageEntete.tailleImage,1,input);//fill image with all pixel value
         if (image == NULL) {
             fprintf(stderr, "ERROR MALLOC");
             closeFile(input);
             closeFile(output);
             return EXIT_FAILURE;
         }
-        int buffer_counter = 0;
+        int buffer_counter =0;
         buffer = 0;
-        for (index = 0; index < imageEntete.tailleImage; index++) // NOLINT(bugprone-too-small-loop-variable)
+        for(index = 0 ; index <imageEntete.tailleImage ; index++) // NOLINT(bugprone-too-small-loop-variable)
         {
             if (buffer_counter == 8) { // if the buffer is full write it in the source folder
                 buffer_counter = 0;
                 fputc(buffer, output);
                 buffer = 0;
             }
-            buffer = (char) ((buffer << 1) +
-                             (image[index] & 0x1)); // NOLINT(hicpp-signed-bitwise,bugprone-narrowing-conversions)
+            buffer = (char)((buffer<<1)+(image[index]&0x1)); // NOLINT(hicpp-signed-bitwise,bugprone-narrowing-conversions)
             buffer_counter++;
         }
         free(image);
@@ -58,8 +61,18 @@ int getHeaderBMP(FILE *file, FichierEntete *fichierEntete, ImageEntete *imageEnt
     }
     fread(fichierEntete, sizeof(FichierEntete), 1, file);
     fread(imageEntete, sizeof(ImageEntete), 1, file);
+
+        int test = ftell(file);
+
     if (ftell(file) != (*fichierEntete).offset) // check if a pallette is present and get information if it's the case
         fread(&couleurPallete, sizeof(CouleurPallete), 1, file);
+    else
+    {
+        couleurPallete->B = 0;
+        couleurPallete->V = 0;
+        couleurPallete->R = 0;
+        couleurPallete->reserve = 0;
+    }
 
     return EXIT_SUCCESS;
 }
@@ -67,12 +80,9 @@ int getHeaderBMP(FILE *file, FichierEntete *fichierEntete, ImageEntete *imageEnt
 int encodeImageBMP(char *sourcePath, char *outputPath, char *transporteurPath) {
     ImageEntete imageEntete;
     FichierEntete fichierEntete;
-    CouleurPallete couleurPallete ;
+    CouleurPallete couleurPallete;
 
-    couleurPallete.B = 0;
-    couleurPallete.V = 0;
-    couleurPallete.R = 0;
-    couleurPallete.reserve = 0;
+
 
     FILE* transporteur = openFile(transporteurPath, "r");
     FILE* source = openFile(sourcePath,"r");
@@ -82,8 +92,9 @@ int encodeImageBMP(char *sourcePath, char *outputPath, char *transporteurPath) {
     unsigned char temp;
     int index;
     unsigned long sourceSize, indexS;
-    unsigned char *dataByte, *imageByte;
-    long debug_value;
+    char *dataByte, *imageByte;
+    long debug;
+
 
 
     getHeaderBMP(transporteur , &fichierEntete, &imageEntete, &couleurPallete);
@@ -94,24 +105,25 @@ int encodeImageBMP(char *sourcePath, char *outputPath, char *transporteurPath) {
     sourceSize = ftell(source);
     fseek(source,0,SEEK_SET);
 
-
-    if (!(couleurPallete.B == 0 && couleurPallete.V == 0 && couleurPallete.R == 0)) {
-        fwrite(&couleurPallete, sizeof(couleurPallete),1,output);
+    if (!(couleurPallete.B == 0 && &couleurPallete.V == 0 && couleurPallete.R == 0)) {
+        //fwrite(&couleurPallete, sizeof(couleurPallete), 1, output);
     }
 
-    if(!canDecodeBMP()) {
+    if(!canDecodeBMP())
         return EXIT_FAILURE;
-    }
 
+    fseek(transporteur,fichierEntete.offset,SEEK_SET);
+    debug = ftell(output);
+    debug = ftell(source);
+    debug = ftell(transporteur);
     imageByte = malloc(sizeof(char)*imageEntete.tailleImage);
-    dataByte = malloc(sizeof(char)*(sourceSize));
+    dataByte = malloc(sizeof(char)*sourceSize);
 
     if(imageByte == NULL || dataByte == NULL ){
         fprintf(stderr,"IMPOSSIBLE ALLOCATE MEMORY");
         return EXIT_FAILURE;
     }
 
-    fseek(transporteur,fichierEntete.offset,SEEK_SET);
     fread(imageByte, sizeof(char)*imageEntete.tailleImage,1,transporteur);
     fread(dataByte, sizeof(char)*sourceSize,1,source);
 
@@ -119,11 +131,11 @@ int encodeImageBMP(char *sourcePath, char *outputPath, char *transporteurPath) {
     for(indexS =0 ; indexS<sourceSize ; indexS++)
     {
         bufferSource = dataByte[indexS];
-
         for(index = 7 ; index>= 0 ; index --) // need correction of value;
         {
             temp = imageByte[(7-index)+indexS*8];
             temp = (bufferSource>>index & 1)  ? temp|1 : temp & 0xFE;
+
             fputc(temp,output);
         }
     }
@@ -133,6 +145,7 @@ int encodeImageBMP(char *sourcePath, char *outputPath, char *transporteurPath) {
     closeFile(output);
     closeFile(transporteur);
     closeFile(source);
+    return EXIT_SUCCESS;
 }
 
 int canDecodeBMP()

@@ -10,3 +10,5 @@ int is_lower(char c);
 int is_alpha(char c);
 void print_binary_char(char character, char lastchar);
 int convert_String_hexa(const char* string);
+
+int compareBMP(char* pathFile1, char* pathFile2);

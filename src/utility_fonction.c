@@ -1,4 +1,5 @@
 #include "utility_fonction.h"
+#include "bitmap.h"
 
 
 FILE* openFile(char* name, char* mode){
@@ -91,4 +92,61 @@ int convert_String_hexa(const char* string){
         result += value;
     }
     return result;
+}
+
+int compareBMP(char* pathFile1, char* pathFile2)
+{
+    FILE* file1 = openFile(pathFile1,"r");
+    FILE* file2 = openFile(pathFile2,"r");
+
+    char *image1Byte;
+    char *image2Byte;
+
+    long index;
+
+    FichierEntete fichierEntete1, fichierEntete2;
+
+    fread(&fichierEntete1, sizeof(FichierEntete),1,file1);
+    fread(&fichierEntete2, sizeof(FichierEntete),1,file2);
+
+    if(fichierEntete1.signature != fichierEntete2.signature || fichierEntete1.tailleFichier != fichierEntete2.tailleFichier)
+    {
+        printf("NOT SAME SIGNATURE OR SIZE");
+        closeFile(file1);
+        closeFile(file2);
+        return 0;
+    }
+
+    image1Byte = malloc(fichierEntete1.tailleFichier);
+    image2Byte = malloc(fichierEntete1.tailleFichier);
+
+    if(image1Byte == NULL || image2Byte == NULL)
+    {
+        fprintf(stderr,"ERROR MEMORY ALLOCATION");
+        closeFile(file1);
+        closeFile(file2);
+        free(image1Byte);
+        free(image2Byte);
+        return 0;
+    }
+
+    fread(image1Byte,fichierEntete1.tailleFichier,1,file1);
+    fread(image2Byte,fichierEntete1.tailleFichier,1,file2);
+
+    for(index = 0; index < fichierEntete1.tailleFichier ; index++){
+        if(image1Byte[index] != image2Byte[index]) {
+            printf("ERROR BYTE n° %d",index);
+            closeFile(file1);
+            closeFile(file2);
+            free(image1Byte);
+            free(image2Byte);
+            return 0;
+        }
+    }
+    printf("Both folder are same");
+    closeFile(file1);
+    closeFile(file2);
+    free(image1Byte);
+    free(image2Byte);
+    return 1;
 }
