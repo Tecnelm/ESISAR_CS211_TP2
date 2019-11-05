@@ -104,7 +104,7 @@ int encodeImageBMP(char *sourcePath, char *outputPath, char *transporteurPath) {
     }
 
     imageByte = malloc(sizeof(char)*imageEntete.tailleImage);
-    dataByte = malloc(sizeof(char)*(sourceSize+1));
+    dataByte = malloc(sizeof(char)*(sourceSize));
 
     if(imageByte == NULL || dataByte == NULL ){
         fprintf(stderr,"IMPOSSIBLE ALLOCATE MEMORY");
@@ -112,11 +112,6 @@ int encodeImageBMP(char *sourcePath, char *outputPath, char *transporteurPath) {
     }
 
     fseek(transporteur,fichierEntete.offset,SEEK_SET);
-    debug_value = ftell(output);
-    debug_value = ftell(source);
-    debug_value = ftell(transporteur);
-
-
     fread(imageByte, sizeof(char)*imageEntete.tailleImage,1,transporteur);
     fread(dataByte, sizeof(char)*sourceSize,1,source);
 
