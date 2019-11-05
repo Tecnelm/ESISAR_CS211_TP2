@@ -1,4 +1,4 @@
-#include "src/fonction_bitmap_decode.h"
+#include "src/fonction_bitmap_steno.h"
 
 int main() {
     char* input="../Data/transporteur.bmp";

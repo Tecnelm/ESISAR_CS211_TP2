@@ -1,4 +1,4 @@
-#include "fonction_bitmap_decode.h"
+#include "fonction_bitmap_steno.h"
 
 int decode_BPM(char* output_path,char* input_path)
 {
