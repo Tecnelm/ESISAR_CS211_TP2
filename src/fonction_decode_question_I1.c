@@ -5,7 +5,7 @@
 
 void decode_fonction(char* source_path,char* transporteur_path)
 {
-    FILE *transporteur;
+    FILE *transporteur; //a
     FILE *source;
     char character;
     int counter = 0;
