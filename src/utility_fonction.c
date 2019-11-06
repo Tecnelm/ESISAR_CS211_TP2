@@ -130,12 +130,19 @@ int compareBMP(char* pathFile1, char* pathFile2)
         return 0;
     }
 
+    fseek(file1,0,SEEK_SET);
+    fseek(file2,0,SEEK_SET);
     fread(image1Byte,fichierEntete1.tailleFichier,1,file1);
     fread(image2Byte,fichierEntete1.tailleFichier,1,file2);
 
     for(index = 0; index < fichierEntete1.tailleFichier ; index++){
         if(image1Byte[index] != image2Byte[index]) {
-            printf("ERROR BYTE n° %d",index);
+            printf("ERROR BYTE n° %d\n",index);
+            int i;
+            for ( i = index; i <fichierEntete1.tailleFichier+fichierEntete1.offset ; ++i) {
+                print_binary_char(image1Byte[index], '\t');
+                print_binary_char(image2Byte[index], '\n');
+            }
             closeFile(file1);
             closeFile(file2);
             free(image1Byte);

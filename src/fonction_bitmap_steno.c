@@ -84,8 +84,8 @@ int encodeImageBMP(char *sourcePath, char *outputPath, char *transporteurPath) {
 
 
 
-    FILE* transporteur = openFile(transporteurPath, "r");
-    FILE* source = openFile(sourcePath,"r");
+    FILE* transporteur = openFile(transporteurPath, "rb");
+    FILE* source = openFile(sourcePath,"rb");
     FILE* output = openFile(outputPath,"w");
 
     unsigned char bufferSource;
@@ -105,22 +105,25 @@ int encodeImageBMP(char *sourcePath, char *outputPath, char *transporteurPath) {
     sourceSize = ftell(source);
     fseek(source,0,SEEK_SET);
 
-    if (!(couleurPallete.B == 0 && &couleurPallete.V == 0 && couleurPallete.R == 0)) {
-        //fwrite(&couleurPallete, sizeof(couleurPallete), 1, output);
+    if (!(couleurPallete.B == 0 && couleurPallete.V == 0 && couleurPallete.R == 0)) {
+        fwrite(&couleurPallete, sizeof(couleurPallete), 1, output);
     }
+    //fwrite(&couleurPallete, sizeof(couleurPallete), 1, output);
 
     if(!canDecodeBMP())
         return EXIT_FAILURE;
 
-    fseek(transporteur,fichierEntete.offset,SEEK_SET);
-    debug = ftell(output);
-    debug = ftell(source);
     debug = ftell(transporteur);
+    debug = ftell(output);
+    fseek(transporteur,fichierEntete.offset,SEEK_SET);
+    fseek(output,fichierEntete.offset,SEEK_SET);
     imageByte = malloc(sizeof(char)*imageEntete.tailleImage);
     dataByte = malloc(sizeof(char)*sourceSize);
 
     if(imageByte == NULL || dataByte == NULL ){
         fprintf(stderr,"IMPOSSIBLE ALLOCATE MEMORY");
+        free(imageByte);
+        free(dataByte);
         return EXIT_FAILURE;
     }
 
@@ -128,17 +131,22 @@ int encodeImageBMP(char *sourcePath, char *outputPath, char *transporteurPath) {
     fread(dataByte, sizeof(char)*sourceSize,1,source);
 
 
-    for(indexS =0 ; indexS<sourceSize ; indexS++)
+    for(indexS =0 ; indexS < sourceSize ; indexS++)
     {
         bufferSource = dataByte[indexS];
+
         for(index = 7 ; index>= 0 ; index --) // need correction of value;
         {
             temp = imageByte[(7-index)+indexS*8];
             temp = (bufferSource>>index & 1)  ? temp|1 : temp & 0xFE;
-
             fputc(temp,output);
         }
     }
+    for (indexS *= 8; indexS < imageEntete.tailleImage; indexS++) {
+        fputc(imageByte[indexS],output);
+    }
+
+
 
     free(imageByte);
     free(dataByte);
