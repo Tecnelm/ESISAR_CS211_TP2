@@ -49,6 +49,39 @@ int decode_BPM(char* output_path,char* input_path)
         }
         free(image);
     }
+    afficher_entete( fichierEntete,  imageEntete , couleurPallete);
+
     closeFile(input);
     closeFile(output);
 }
+
+void afficher_entete(FichierEntete fichierEntete, ImageEntete imageEntete ,CouleurPallete couleurPallete){
+
+
+    printf("signature : %d\n" , fichierEntete.signature);
+    printf("taille fichier : %d\n" , fichierEntete.tailleFichier);
+    printf("reserve : %d\n" , fichierEntete.reserve);
+    printf("offset : %d\n" , fichierEntete.offset);
+
+    printf("tailleEntete : %d\n" , imageEntete.tailleEntete);
+    printf("largeur : %d\n" , imageEntete.largeur);
+    printf("hauteur : %d\n" , imageEntete.hauteur);
+    printf("plan : %d\n" , imageEntete.plan);
+    printf("profondeur : %d\n" , imageEntete.profondeur);
+    printf("compression : %d\n" , imageEntete.compression);
+    printf("tailleImage : %d\n" , imageEntete.tailleImage);
+    printf("resolutionHorizontale : %d\n" , imageEntete.resolutionHorizontale);
+    printf("resolutionVerticale : %d\n" , imageEntete.resolutionVerticale);
+    printf("nombreCouleurs : %d\n" , imageEntete.nombreCouleurs);
+    printf("resolutionHorizontale : %d\n" , imageEntete.resolutionHorizontale);
+    printf("nombreCouleursImportantes : %d\n" , imageEntete.nombreCouleursImportantes);
+
+    printf("B : %d\n" , couleurPallete.B);
+    printf("V : %d\n" , couleurPallete.V);
+    printf("R : %d\n" , couleurPallete.R);
+    printf("reserve : %d\n" , couleurPallete.reserve);
+
+
+}
+
+
