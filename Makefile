@@ -9,10 +9,10 @@ OBJDIR = obj
 SRCDIR = src
 MAINDIR = .
 
-MAIN = main.c
+MAIN = main
 
 SRCS= $(wildcard $(SRCDIR)/*.c)
-OBJS= $(SRCS:$(SRCDIR)/%.c=$(OUT)/$(OBJDIR)/%.o) $(OUT)/$(OBJDIR)/main.o
+OBJS= $(SRCS:$(SRCDIR)/%.c=$(OUT)/$(OBJDIR)/%.o) $(OUT)/$(OBJDIR)/$(MAIN).o
 HEADER =$(wildcard $(SRCDIR)/*.h)
 
 ifeq ($(DEBUG),yes)
@@ -27,7 +27,7 @@ $(OUT)/$(EXEC):$(OBJS) $(HEADER)
 	@mkdir -p $(OUT)/$(OBJDIR)
 	$(CC) $(CFLAGS) $(OBJS) -o $@
 
-$(OUT)/$(OBJDIR)/main.o: $(MAINDIR)/main.c
+$(OUT)/$(OBJDIR)/$(MAIN).o: $(MAINDIR)/$(MAIN).c
 	@mkdir -p $(OUT)
 	@mkdir -p $(OUT)/$(OBJDIR)
 	$(CC) -o $@ -c $^ $(CFLAGS)
@@ -37,7 +37,7 @@ $(OUT)/$(OBJDIR)/%.o: $(SRCDIR)/%.c $(SRCDIR)/%.h
 	@mkdir -p $(OUT)/$(OBJDIR)
 	$(CC) -o $@ -c $< $(CFLAGS)
 
-.PHONY: clean mrproper
+.PHONY: clean mrproper run
 
 
 clean:
