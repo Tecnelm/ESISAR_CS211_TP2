@@ -1,6 +1,16 @@
 #include "src/fonction_bitmap_steno.h"
+#include "src/fonction_decode_question_I1.h"
 
 int main() {
+
+	///code for the preparation question
+    /*char *transporteur_path ="../Data/transporteur.txt";
+    char *source_path ="../Data/source.txt";
+
+
+    decode_fonction(source_path,transporteur_path);
+    return EXIT_SUCCESS;
+	 */
 
 	///Decode the source file
     char *transporteur = "../Data/transporteur.bmp";
@@ -21,5 +31,6 @@ int main() {
 	///compare the encoded image by the fonction and the base image together to see if they are the same
     compareBMP("../Data/transporteur.bmp","../Data/encoded.bmp");
 
-    return 0;
+    return EXIT_SUCCESS;
+
 }
