@@ -2,8 +2,6 @@
 #include "src/fonction_decode_question_I1.h"
 #include "src/fonction_prep.h"
 #include "src/menu.h"
-
-
 int programme1 ();
 
 int programme2 ();
@@ -32,9 +30,7 @@ int main (int argc, char *argv[]) {
 			break;
 		case 4:programme4(argc, argv);
 			break;
-		default:
-			fprintf(stderr, "NO PROGRAMME SELECTED");
-			break;
+		default:fprintf(stderr,"NO PROGRAMME SELECTED");break;
 	}
 
 	return EXIT_SUCCESS;
