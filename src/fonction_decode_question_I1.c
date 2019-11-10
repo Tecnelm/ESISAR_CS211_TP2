@@ -1,6 +1,3 @@
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "hicpp-signed-bitwise"
-
 #include "fonction_decode_question_I1.h"
 #include "utility_fonction.h"
 

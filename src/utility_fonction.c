@@ -172,7 +172,7 @@ int compareBMP (char *pathFile1, char *pathFile2) {
 
 	for (index = 0; index < size; index++) {/// compare each byte together
 		if (image1Byte[index] != image2Byte[index]) {
-			printf("ERROR BYTE n° %d\n", index);
+			printf("ERROR BYTE n° %ld\n", index);
 			closeFile(file1);
 			closeFile(file2);
 			free(image1Byte);
