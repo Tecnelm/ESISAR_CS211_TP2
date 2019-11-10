@@ -16,14 +16,11 @@ int decode_BMP (char *output_path, char *input_path) {
 	input = openFile(input_path, "r");
 	output = openFile(output_path, "w");
 
-	fread(&fichierEntete, sizeof(FichierEntete), 1, input);
+	getHeaderBMP(input, &fichierEntete, &imageEntete, &couleurPallete);
+
 	if (fichierEntete.signature != 0x4D42) {///0x4D42 "BM" en hexa
 		fprintf(stderr, "ERROR WRONG FORMAT");
 		return EXIT_FAILURE;
-	}
-	fread(&imageEntete, sizeof(ImageEntete), 1, input);
-	if (ftell(input) != fichierEntete.offset) { /// check if a pallette is present and get information if it's the case
-		fread(&couleurPallete, sizeof(CouleurPallete), 1, input);
 	}
 
 	fseek(input, fichierEntete.offset, SEEK_SET);///set the position to the first byte of image
@@ -46,13 +43,14 @@ int decode_BMP (char *output_path, char *input_path) {
 				buffer = 0;
 			}
 			buffer = ( unsigned char) ((buffer << 1) +
-							 (image[index] & 0x1));
+									   (image[index] & 0x1));
 			buffer_counter++;
 		}
 		free(image);
 	}
 	closeFile(input);
 	closeFile(output);
+	return EXIT_SUCCESS;
 }
 
 ///
@@ -144,11 +142,11 @@ int encodeImageBMP (char *sourcePath, char *outputPath, char *transporteurPath) 
 
 		for (index = 7; index >= 0; index--) {
 			temp = imageByte[(7 - index) + indexS * 8];
-			temp = (bufferSource >> index & 1) ? temp | 1 : temp & 0xFE;
+			temp = (bufferSource >> index & 1) ? temp | 1 : temp & 0xFE; /// change the first bit of the image byte in fonction of the bit of the source
 			fputc(temp, output);
 		}
 	}
-	for (indexS *= 8; indexS < imageEntete.tailleImage; indexS++) {
+	for (indexS *= 8; indexS < imageEntete.tailleImage; indexS++) {/// if the source haven't the right number of byte end to copy the transporteur file (byte not codded)
 		fputc(imageByte[indexS], output);
 	}
 
