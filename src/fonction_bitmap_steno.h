@@ -10,4 +10,4 @@ int getHeaderBMP (FILE *file, FichierEntete *fichierEntete, ImageEntete *imageEn
 
 int encodeImageBMP (char *sourcePath, char *outputPath, char *transporteurPath);
 
-void afficherEntete(FichierEntete fichierEntete, ImageEntete imageEntete ,CouleurPallete couleurPallete);
+void afficherEntete (FichierEntete fichierEntete, ImageEntete imageEntete, CouleurPallete couleurPallete);

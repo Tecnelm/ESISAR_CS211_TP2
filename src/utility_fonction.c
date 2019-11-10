@@ -25,7 +25,7 @@ void closeFile (FILE *file) {
 	}
 }
 
-int is_inside_table (char c, const char *table, int table_size) {///compare each element of a table and return if the parmeter is present
+int isInsideTable (char c, const char *table, int table_size) {///compare each element of a table and return if the parmeter is present
 
 	int result = 0;
 	int index = 0;
@@ -36,6 +36,19 @@ int is_inside_table (char c, const char *table, int table_size) {///compare each
 	}
 	while ((c != table[index]) && ++index < table_size);
 	return result;
+}
+
+void isInsideTest () {
+
+	int size = 5;
+	char chaine[] = {'a', 'b', 'a', 'd', 'e'};
+	char compare[] = {'a', 'e', 'i', 'o', 'u', 'y'};
+	int n = sizeof(compare) / sizeof(char);
+	int index;
+	for (index = 0; index < size; index++) {
+		int temp = isInsideTable(chaine[index], compare, n);
+		printf("char n* %d : %d\n", index, temp);
+	}
 }
 
 int is_upper (char c) {
