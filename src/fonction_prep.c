@@ -63,17 +63,6 @@ int *get_info_char (const char *folder_name) {
 	return info_char;
 }
 
-
-int is_upper (char c) {
-
-	return (c >= 'A' && c <= 'Z');
-}
-
-int is_lower (char c) {
-
-	return (c >= 'a' && c <= 'z');
-}
-
 void aff_value (int *table, const char *folder_name) {
 
 	printf("information from: \n\t%s\n", folder_name);

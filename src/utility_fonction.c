@@ -187,3 +187,10 @@ int compareBMP (char *pathFile1, char *pathFile2) {
 	free(image2Byte);
 	return EXIT_SUCCESS;
 }
+
+void resetBuffer () {
+
+	int c;
+	while ((c = getchar()) != EOF && c != '\n');
+}
+
