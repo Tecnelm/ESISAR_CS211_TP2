@@ -65,10 +65,10 @@ void print_binary_char (char c, char lastchar) {
 
 int convert_String_hexa (const char *string) { /// convert a char*, format in HEXA to an integer "FF" -> 255
 
-	int stringlen = strlen(string);
+	unsigned int stringlen = strlen(string);
 	int result = 0;
 	int value;
-	int index;
+	unsigned int index;
 
 	for (index = 0; index < stringlen; index++) {
 		result *= 16;
@@ -114,28 +114,34 @@ int convert_String_hexa (const char *string) { /// convert a char*, format in HE
 
 int compareBMP (char *pathFile1, char *pathFile2) {
 
-	FILE *file1 = openFile(pathFile1, "r");
+	FILE *file1 = openFile(pathFile1, "r"); /// open file
 	FILE *file2 = openFile(pathFile2, "r");
 
-	char *image1Byte;
+	char *image1Byte;/// list of byte for the image one and two
 	char *image2Byte;
 
 	long index;
+	long size;
 
 	FichierEntete fichierEntete1, fichierEntete2;
 
-	fread(&fichierEntete1, sizeof(FichierEntete), 1, file1);
+	fread(&fichierEntete1, sizeof(FichierEntete), 1, file1);/// read the entete to know the size of the image
 	fread(&fichierEntete2, sizeof(FichierEntete), 1, file2);
 
-	if (fichierEntete1.signature != fichierEntete2.signature || fichierEntete1.tailleFichier != fichierEntete2.tailleFichier) {
-		printf("NOT SAME SIGNATURE OR SIZE");
+	fseek(file2, 0, SEEK_END);/// go to the end of the file to know the size of the data
+	fseek(file1, 0, SEEK_END);
+
+	size = ftell(file1) == ftell(file2) ? ftell(file2) : 0;
+
+	if (size == 0) {
+		printf("SIZE NULL OR DIFFERENT");
 		closeFile(file1);
 		closeFile(file2);
-		return 0;
+		return EXIT_FAILURE;
 	}
 
-	image1Byte = malloc(fichierEntete1.tailleFichier);
-	image2Byte = malloc(fichierEntete1.tailleFichier);
+	image1Byte = malloc(size);
+	image2Byte = malloc(size);
 
 	if (image1Byte == NULL || image2Byte == NULL) {
 		fprintf(stderr, "ERROR MEMORY ALLOCATION");
@@ -148,28 +154,23 @@ int compareBMP (char *pathFile1, char *pathFile2) {
 
 	fseek(file1, 0, SEEK_SET);
 	fseek(file2, 0, SEEK_SET);
-	fread(image1Byte, fichierEntete1.tailleFichier, 1, file1);
-	fread(image2Byte, fichierEntete1.tailleFichier, 1, file2);
+	fread(image1Byte, size, 1, file1);
+	fread(image2Byte, size, 1, file2);
 
-	for (index = 0; index < fichierEntete1.tailleFichier; index++) {
+	for (index = 0; index < size; index++) {/// compare each byte together
 		if (image1Byte[index] != image2Byte[index]) {
 			printf("ERROR BYTE n° %d\n", index);
-			int i;
-			for (i = index; i < fichierEntete1.tailleFichier + fichierEntete1.offset; ++i) {
-				print_binary_char(image1Byte[index], '\t');
-				print_binary_char(image2Byte[index], '\n');
-			}
 			closeFile(file1);
 			closeFile(file2);
 			free(image1Byte);
 			free(image2Byte);
-			return 0;
+			return EXIT_FAILURE;
 		}
 	}
-	printf("Both folder are same");
+	printf("SUCESS BOTH FOLDER ARE SAME");
 	closeFile(file1);
 	closeFile(file2);
 	free(image1Byte);
 	free(image2Byte);
-	return 1;
+	return EXIT_SUCCESS;
 }

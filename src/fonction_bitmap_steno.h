@@ -4,10 +4,10 @@
 
 int decode_BMP (char *output_path, char *input_path);
 
-int canEncodeBMP (long sizeSource, long sizeTrans);
+int canEncodeBMP (unsigned long sizeSource, unsigned long sizeTrans);
 
 int getHeaderBMP (FILE *file, FichierEntete *fichierEntete, ImageEntete *imageEntete, CouleurPallete *couleurPallete);
 
 int encodeImageBMP (char *sourcePath, char *outputPath, char *transporteurPath);
 
-void afficher_entete(FichierEntete fichierEntete, ImageEntete imageEntete ,CouleurPallete couleurPallete);
+void afficherEntete(FichierEntete fichierEntete, ImageEntete imageEntete ,CouleurPallete couleurPallete);

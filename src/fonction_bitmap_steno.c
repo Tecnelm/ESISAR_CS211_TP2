@@ -10,13 +10,15 @@ int decode_BMP (char *output_path, char *input_path) {
 	CouleurPallete couleurPallete;
 	unsigned char *image;
 	unsigned char buffer;
-	int index;
+	unsigned int index;
 
 
 	input = openFile(input_path, "r");
 	output = openFile(output_path, "w");
 
 	getHeaderBMP(input, &fichierEntete, &imageEntete, &couleurPallete);
+
+	afficherEntete(fichierEntete, imageEntete, couleurPallete);
 
 	if (fichierEntete.signature != 0x4D42) {///0x4D42 "BM" en hexa
 		fprintf(stderr, "ERROR WRONG FORMAT");
@@ -35,15 +37,14 @@ int decode_BMP (char *output_path, char *input_path) {
 		}
 		int buffer_counter = 0;
 		buffer = 0;
-		for (index = 0; index < imageEntete.tailleImage; index++)
-		{
+		for (index = 0; index < imageEntete.tailleImage; index++) {
 			if (buffer_counter == 8) { /// if the buffer is full write it in the source folder
 				buffer_counter = 0;
 				fputc(buffer, output);
 				buffer = 0;
 			}
-			buffer = ( unsigned char) ((buffer << 1) +
-									   (image[index] & 0x1));
+			buffer = (unsigned char) ((buffer << 1) +
+									  (image[index] & 0x1));
 			buffer_counter++;
 		}
 		free(image);
@@ -142,11 +143,13 @@ int encodeImageBMP (char *sourcePath, char *outputPath, char *transporteurPath) 
 
 		for (index = 7; index >= 0; index--) {
 			temp = imageByte[(7 - index) + indexS * 8];
-			temp = (bufferSource >> index & 1) ? temp | 1 : temp & 0xFE; /// change the first bit of the image byte in fonction of the bit of the source
+			temp = (bufferSource >> index & 1) ? temp | 1 : temp &
+															0xFE; /// change the first bit of the image byte in fonction of the bit of the source
 			fputc(temp, output);
 		}
 	}
-	for (indexS *= 8; indexS < imageEntete.tailleImage; indexS++) {/// if the source haven't the right number of byte end to copy the transporteur file (byte not codded)
+	for (indexS *= 8; indexS <
+					  imageEntete.tailleImage; indexS++) {/// if the source haven't the right number of byte end to copy the transporteur file (byte not codded)
 		fputc(imageByte[indexS], output);
 	}
 
@@ -159,39 +162,39 @@ int encodeImageBMP (char *sourcePath, char *outputPath, char *transporteurPath) 
 	return EXIT_SUCCESS;
 }
 
-int canEncodeBMP (long sizeSource, long sizeTrans) {
+int canEncodeBMP (unsigned long sizeSource, unsigned long sizeTrans) {
 
 	return sizeSource * 8 <= sizeTrans;
 }
 
 
+void afficherEntete (FichierEntete fichierEntete, ImageEntete imageEntete, CouleurPallete couleurPallete) {
 
-void afficher_entete(FichierEntete fichierEntete, ImageEntete imageEntete ,CouleurPallete couleurPallete){
+	/// FichierEntete print
+	printf("signature : %hd\n", fichierEntete.signature);
+	printf("taille fichier : %d\n", fichierEntete.tailleFichier);
+	printf("reserve : %d\n", fichierEntete.reserve);
+	printf("offset : %d\n", fichierEntete.offset);
 
+	/// Image entete print
+	printf("tailleEntete : %d\n", imageEntete.tailleEntete);
+	printf("largeur : %d\n", imageEntete.largeur);
+	printf("hauteur : %d\n", imageEntete.hauteur);
+	printf("plan : %hd\n", imageEntete.plan);
+	printf("profondeur : %d\n", imageEntete.profondeur);
+	printf("compression : %d\n", imageEntete.compression);
+	printf("tailleImage : %d\n", imageEntete.tailleImage);
+	printf("resolutionHorizontale : %d\n", imageEntete.resolutionHorizontale);
+	printf("resolutionVerticale : %d\n", imageEntete.resolutionVerticale);
+	printf("nombreCouleurs : %d\n", imageEntete.nombreCouleurs);
+	printf("resolutionHorizontale : %d\n", imageEntete.resolutionHorizontale);
+	printf("nombreCouleursImportantes : %d\n", imageEntete.nombreCouleursImportantes);
 
-    printf("signature : %d\n" , fichierEntete.signature);
-    printf("taille fichier : %d\n" , fichierEntete.tailleFichier);
-    printf("reserve : %d\n" , fichierEntete.reserve);
-    printf("offset : %d\n" , fichierEntete.offset);
-
-    printf("tailleEntete : %d\n" , imageEntete.tailleEntete);
-    printf("largeur : %d\n" , imageEntete.largeur);
-    printf("hauteur : %d\n" , imageEntete.hauteur);
-    printf("plan : %d\n" , imageEntete.plan);
-    printf("profondeur : %d\n" , imageEntete.profondeur);
-    printf("compression : %d\n" , imageEntete.compression);
-    printf("tailleImage : %d\n" , imageEntete.tailleImage);
-    printf("resolutionHorizontale : %d\n" , imageEntete.resolutionHorizontale);
-    printf("resolutionVerticale : %d\n" , imageEntete.resolutionVerticale);
-    printf("nombreCouleurs : %d\n" , imageEntete.nombreCouleurs);
-    printf("resolutionHorizontale : %d\n" , imageEntete.resolutionHorizontale);
-    printf("nombreCouleursImportantes : %d\n" , imageEntete.nombreCouleursImportantes);
-
-    printf("B : %d\n" , couleurPallete.B);
-    printf("V : %d\n" , couleurPallete.V);
-    printf("R : %d\n" , couleurPallete.R);
-    printf("reserve : %d\n" , couleurPallete.reserve);
-
+	/// Courleur Palette print
+	printf("B : %hd\n", couleurPallete.B);
+	printf("V : %hd\n", couleurPallete.V);
+	printf("R : %hd\n", couleurPallete.R);
+	printf("reserve : %hd\n", couleurPallete.reserve);
 
 }
 
