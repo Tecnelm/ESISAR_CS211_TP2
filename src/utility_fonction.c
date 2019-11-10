@@ -180,7 +180,7 @@ int compareBMP (char *pathFile1, char *pathFile2) {
 			return EXIT_FAILURE;
 		}
 	}
-	printf("SUCESS BOTH FOLDER ARE SAME");
+	printf("SUCESS BOTH FOLDER ARE SAME\n");
 	closeFile(file1);
 	closeFile(file2);
 	free(image1Byte);

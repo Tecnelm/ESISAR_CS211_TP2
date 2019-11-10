@@ -16,9 +16,10 @@ int main (int argc, char *argv[]) {
 			"Encode/decodeBMP",
 			"Question Preparatoire Nombre",
 			"Nombre impaire",
-			"Transporteur texte"
+			"Transporteur texte",
+			"EXIT"
 	};
-	int size = 4;
+	int size = 5;
 	int programme = menu(progName, size);
 
 	switch (programme) {
@@ -55,7 +56,7 @@ int programme1 () {
 	decode_BMP(out, encoded);
 
 	///compare the encoded image by the fonction and the base image together to see if they are the same
-	compareBMP("./Data/transporteur.bmp", "../Data/encoded.bmp");
+	compareBMP("./Data/transporteur.bmp", "./Data/encoded.bmp");
 	return EXIT_SUCCESS;
 }
 

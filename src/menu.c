@@ -7,12 +7,12 @@ int menu (char *tableProg[], int sizeTable) {
 	int index;
 	int tempValue;
 
-	printf("Quel programme voulez-vous exécuter:\n");
 	while (programmeIndex == -1) {
+		printf("Quel programme voulez-vous exécuter:\n");
 		for (index = 0; index < sizeTable; index++) {
 			printf("\t%d. %s:\n", index + 1, tableProg[index]);
 		}
-		printf("number :");
+		printf("number : ");
 		scanf("%d", &tempValue);
 		printf("\n");
 		resetBuffer();
