@@ -31,7 +31,7 @@ int main (int argc, char *argv[]) {
 			break;
 		case 4:programme4(argc, argv);
 			break;
-		default:fprintf(stderr,"NO PROGRAMME SELECTED");break;
+		default:fprintf(stderr,"NO PROGRAMME SELECTED\n");break;
 	}
 
 	return EXIT_SUCCESS;
@@ -80,7 +80,7 @@ int programme4 (int argc, char *argv[]) {
 
 	int *data;
 	if (argc == 1) {
-		printf("No argument specified Program abord");
+		printf("No argument specified Program abord\n");
 		return EXIT_FAILURE;
 	}
 	else {
